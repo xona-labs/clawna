@@ -1,0 +1,43 @@
+{
+  "gateway": {
+    "mode": "local"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "allowlist",
+      "allowFrom": ["454135097"],
+      "actions": {
+        "sendMessage": true
+      },
+      "groups": {
+        "*": { "requireMention": true }
+      },
+      "groupPolicy": "open"
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-opus-4-6",
+        "fallbacks": ["google/gemini-3-flash-preview"]
+      },
+      "workspace": "/home/node/.openclaw/workspace",
+      "thinkingDefault": "low",
+      "contextTokens": 200000
+    },
+    "list": [
+      {
+        "id": "xona",
+        "default": true,
+        "identity": {
+          "name": "Xona",
+          "theme": "creative AI design agent on Solana"
+        },
+        "groupChat": {
+          "mentionPatterns": ["xona", "Xona", "@xona", "clawna", "Clawna", "@clawna"]
+        }
+      }
+    ]
+  }
+}

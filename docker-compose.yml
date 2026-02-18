@@ -1,0 +1,28 @@
+services:
+  # OpenClaw gateway — the AI brain running Xona
+  openclaw-gateway:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: clawna
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:18790:18789"
+    volumes:
+      - agent-data:/home/node/.openclaw
+      - ./openclaw.json:/seed/openclaw.json:ro
+      - ./SOUL.md:/home/node/.openclaw/workspace/SOUL.md:ro
+      - ./AGENTS.md:/home/node/.openclaw/workspace/AGENTS.md:ro
+      - ./skills:/home/node/.openclaw/workspace/skills:ro
+      - ./scripts:/home/node/.openclaw/workspace/scripts:ro
+
+    user: "0:0"
+    command: >
+      sh -c "cp /seed/openclaw.json /home/node/.openclaw/openclaw.json;
+             chown -R 1000:1000 /home/node/.openclaw /tmp;
+             su -s /bin/sh node -c '
+               cd /home/node/.openclaw/workspace/scripts && npm install --omit=dev 2>/dev/null;
+               node /app/dist/index.js gateway --port 18789
+             '"
+
+volumes:
+  agent-data:
