@@ -14,6 +14,7 @@ services:
       - ./AGENTS.md:/home/node/.openclaw/workspace/AGENTS.md:ro
       - ./skills:/home/node/.openclaw/workspace/skills:ro
       - ./scripts:/home/node/.openclaw/workspace/scripts:ro
+      - ./HEARTBEAT.md:/home/node/.openclaw/workspace/HEARTBEAT.md:ro
 
     user: "0:0"
     command: >

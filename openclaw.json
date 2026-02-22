@@ -1,6 +1,11 @@
 {
   "gateway": {
-    "mode": "local"
+    "mode": "local",
+    "http": {
+      "endpoints": {
+        "chatCompletions": { "enabled": true }
+      }
+    }
   },
   "channels": {
     "telegram": {
@@ -24,7 +29,17 @@
       },
       "workspace": "/home/node/.openclaw/workspace",
       "thinkingDefault": "low",
-      "contextTokens": 200000
+      "contextTokens": 200000,
+      "heartbeat": {
+        "every": "60m",
+        "target": "telegram",
+        "to": "454135097",
+        "activeHours": {
+          "start": "08:00",
+          "end": "23:00"
+        },
+        "prompt": "Read HEARTBEAT.md and follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK."
+      }
     },
     "list": [
       {
@@ -35,7 +50,7 @@
           "theme": "creative AI design agent on Solana"
         },
         "groupChat": {
-          "mentionPatterns": ["xona", "Xona", "@xona", "clawna", "Clawna", "@clawna"]
+          "mentionPatterns": ["xona", "Xona", "@xona", "@xona_creative", "xona_creative", "clawna", "Clawna", "@clawna"]
         }
       }
     ]

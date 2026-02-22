@@ -17,12 +17,12 @@ Returns JSON with new mentions since last check:
 ```json
 {
   "success": true,
-  "my_username": "XonaAgent",
+  "my_username": "xona_creative",
   "count": 2,
   "mentions": [
     {
       "id": "1234567890",
-      "text": "@XonaAgent hey make me a cool logo",
+      "text": "@xona_creative hey make me a cool logo",
       "author_username": "someone",
       "author_name": "Some User",
       "created_at": "2026-02-18T10:00:00Z",
