@@ -13,7 +13,7 @@ services:
       - ./SOUL.md:/home/node/.openclaw/workspace/SOUL.md:ro
       - ./AGENTS.md:/home/node/.openclaw/workspace/AGENTS.md:ro
       - ./skills:/home/node/.openclaw/workspace/skills
-      - ./scripts:/home/node/.openclaw/workspace/scripts:ro
+      - ./scripts:/home/node/.openclaw/workspace/scripts
       - ./HEARTBEAT.md:/home/node/.openclaw/workspace/HEARTBEAT.md
 
     user: "0:0"
