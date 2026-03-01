@@ -3,7 +3,8 @@
     "mode": "local",
     "http": {
       "endpoints": {
-        "chatCompletions": { "enabled": true }
+        "chatCompletions": { "enabled": true },
+        "responses": { "enabled": true }
       }
     }
   },
@@ -23,6 +24,7 @@
   },
   "agents": {
     "defaults": {
+      "skipBootstrap": true,
       "model": {
         "primary": "google/gemini-2.5-flash",
         "fallbacks": ["google/gemini-3-flash-preview"]
