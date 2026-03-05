@@ -1,6 +1,6 @@
 ---
 name: solana-wallet
-description: Manage the Solana wallet for x402 payments. Create wallet JSON file from the XONA_WALLET_SECRET env var, check wallet balance, get public key, and verify wallet setup. Use when the owner asks to set up the wallet, check balance, or troubleshoot wallet issues.
+description: Manage the Solana wallet for x402 payments. Create wallet JSON file from the AGENT_WALLET_SECRET env var, check wallet balance, get public key, and verify wallet setup. Use when the owner asks to set up the wallet, check balance, or troubleshoot wallet issues.
 ---
 
 # Solana Wallet Management
@@ -15,7 +15,7 @@ Inside the container: `/home/node/.config/solana/id.json`
 
 ## Create Wallet JSON from Environment
 
-The `XONA_WALLET_SECRET` env var contains the base58-encoded private key. Run this to create the JSON file:
+The `AGENT_WALLET_SECRET` env var contains the base58-encoded private key. Run this to create the JSON file:
 
 ```bash
 mkdir -p ~/.config/solana && node -e '
@@ -38,8 +38,8 @@ function bs58decode(str) {
   for (let i = 0; i < str.length && str[i] === "1"; i++) bytes.push(0);
   return bytes.reverse();
 }
-const secret = process.env.XONA_WALLET_SECRET;
-if (!secret) { console.error("XONA_WALLET_SECRET not set"); process.exit(1); }
+const secret = process.env.AGENT_WALLET_SECRET;
+if (!secret) { console.error("AGENT_WALLET_SECRET not set"); process.exit(1); }
 const bytes = bs58decode(secret);
 console.log(JSON.stringify(bytes));
 ' > ~/.config/solana/id.json && echo "Wallet created at ~/.config/solana/id.json"
@@ -151,7 +151,7 @@ When the owner asks to set up or verify the wallet:
 
 | Issue | Solution |
 |-------|----------|
-| "XONA_WALLET_SECRET not set" | The env var is missing from `.env` or not loaded |
+| "AGENT_WALLET_SECRET not set" | The env var is missing from `.env` or not loaded |
 | "Wallet file NOT found" | Run the create command first |
 | "Invalid base58 character" | The secret key is corrupted or incorrectly formatted |
 | Zero balances | Fund the wallet with SOL (for fees) and USDC (for x402 payments) |
@@ -160,4 +160,4 @@ When the owner asks to set up or verify the wallet:
 
 - The `id.json` file contains your private key — never share or expose it
 - The public key is safe to share (it's your wallet address)
-- Keep `XONA_WALLET_SECRET` secure in your `.env` file
+- Keep `AGENT_WALLET_SECRET` secure in your `.env` file
