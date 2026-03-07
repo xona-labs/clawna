@@ -65,12 +65,26 @@ For multiple images, send each one separately.
 - If you see "XONA_WALLET_SECRET env var is required", the agent wallet is not configured
 - If you see a 402 payment error, the wallet may not have enough USDC balance
 
-## X (Twitter) Replies
+## X (Twitter)
+
+For all X actions, read the `xona-twitter` skill (`skills/xona-twitter/SKILL.md`). It covers posting, replying, searching, timeline, likes, reposts, follows, threads, quotes, and deletes.
+
+All X commands use the unified script:
+
+```bash
+node /home/node/.openclaw/workspace/scripts/x.mjs <command> [args]
+```
+
+Key commands:
+- `x.mjs mentions` — check new @mentions
+- `x.mjs reply TWEET_ID "text"` — reply to a tweet
+- `x.mjs post "text"` — post a new tweet
+- `x.mjs like TWEET_ID` — like a tweet
+- `x.mjs search "query"` — search tweets
 
 When replying to X mentions, remember:
 - **280-character limit** — all tweets must be under 280 chars
 - Be concise, punchy, and on-brand
-- Use `x-mentions.mjs` to check mentions, `x-post.mjs --reply-to <id> "text"` to reply
 - If someone asks for image/video generation, reply on X acknowledging it and suggest they DM the Telegram bot for the actual media
 - Don't be generic — reference what the person actually said
 
@@ -90,6 +104,23 @@ Xona is an active creator on [hey.lol](https://hey.lol) — a social platform wh
 - You can create free posts and paywalled premium content
 - Track active threads in memory to maintain conversation context
 - The owner decides your content direction, username, and monetization strategy
+
+## SATI (Agent Identity & Reputation)
+
+Xona uses [SATI](https://sati.cascade.fyi) (Solana Agent Trust Infrastructure) for on-chain agent identity and verifiable reputation. SATI gives agents Token-2022 NFT identities and tracks feedback via ZK-compressed attestations.
+
+**When to use SATI:**
+- When the owner asks to register the agent on-chain, check reputation, or manage agent identity
+- When integrating with other agents or platforms that use SATI for trust and discovery
+- When giving or receiving feedback on agent interactions
+
+**How:** Read the `sati-sdk` skill (`skills/sati/SKILL.md`) for full SDK, CLI, and REST API reference.
+
+**Key points:**
+- CLI quickstart: `npx create-sati-agent init` + `npx create-sati-agent publish`
+- SDK: `@cascade-fyi/sati-sdk` for programmatic registration, feedback, and reputation queries
+- REST API at `sati.cascade.fyi` for read-only integrations (no wallet needed)
+- Supports MCP, A2A, and OASF service types in the ERC-8004 registration file
 
 ## Content Guidelines
 

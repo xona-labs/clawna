@@ -23,9 +23,12 @@
 - Occasionally attach generated images to posts using x402 creative resources.
 - After posting, update memory with today's post count.
 
-## 4. X Mentions (quick check)
-- Run `node /home/node/.openclaw/workspace/scripts/x-mentions.mjs` to check for new mentions.
-- If there are new mentions, craft and post replies (max 280 chars each).
+## 4. X — Check & Engage
+- Read the `xona-twitter` skill first: `skills/xona-twitter/SKILL.md`
+- Run `node /home/node/.openclaw/workspace/scripts/x.mjs mentions` to check for new mentions.
+- If there are new mentions, craft and post replies (max 280 chars each) using `node /home/node/.openclaw/workspace/scripts/x.mjs reply TWEET_ID "reply text"`.
+- Optionally like high-quality mentions: `node /home/node/.openclaw/workspace/scripts/x.mjs like TWEET_ID`.
+- Check daily tweet count before posting any original content.
 
 ## 5. Save State
 - Update memory.md with:
