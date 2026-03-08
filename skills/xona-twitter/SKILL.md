@@ -6,7 +6,7 @@ metadata:
     emoji: "🐦"
     requires:
       bins: ["node"]
-      env: ["X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_SECRET"]
+      env_any: ["X_AUTH_TOKEN", "X_API_KEY"]
 ---
 
 # Xona Twitter — All Capabilities
@@ -18,6 +18,17 @@ All commands use the unified script:
 ```bash
 node /home/node/.openclaw/workspace/scripts/x.mjs <command> [args]
 ```
+
+## Authentication
+
+Two auth methods supported (pick one):
+
+| Method | Env var(s) | Notes |
+|--------|-----------|-------|
+| **OAuth 2.0** (recommended) | `X_AUTH_TOKEN` | User access token from PKCE flow. Simplest setup. |
+| OAuth 1.0a (fallback) | `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET` | 4 credentials. Media upload not supported via this method. |
+
+The script auto-detects which method to use based on available env vars. `X_AUTH_TOKEN` takes priority.
 
 ---
 

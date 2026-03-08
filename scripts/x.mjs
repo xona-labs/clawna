@@ -18,8 +18,9 @@
  *   node x.mjs delete TWEET_ID
  *   node x.mjs get TWEET_ID
  *
- * Env vars required:
- *   X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_SECRET
+ * Auth (pick one):
+ *   X_AUTH_TOKEN                                    — OAuth 2.0 access token (recommended)
+ *   X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_SECRET — OAuth 1.0a (fallback)
  *
  * State dir: ~/.openclaw/
  */
@@ -51,27 +52,30 @@ function err(obj) {
 }
 
 function getClient() {
+  // Priority 1: OAuth 2.0 access token (simplest)
+  const authToken = process.env.X_AUTH_TOKEN;
+  if (authToken) {
+    return new Client({ accessToken: authToken });
+  }
+
+  // Priority 2: OAuth 1.0a (4 credentials)
   const apiKey = process.env.X_API_KEY;
   const apiSecret = process.env.X_API_SECRET;
   const accessToken = process.env.X_ACCESS_TOKEN;
   const accessSecret = process.env.X_ACCESS_SECRET;
 
-  if (!apiKey || !apiSecret || !accessToken || !accessSecret) {
-    err({
-      success: false,
-      error: 'Missing X API credentials. Set X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_SECRET',
+  if (apiKey && apiSecret && accessToken && accessSecret) {
+    const oauth1 = new OAuth1({
+      apiKey,
+      apiSecret,
+      accessToken,
+      accessTokenSecret: accessSecret,
+      callback: 'oob',
     });
+    return new Client({ oauth1 });
   }
 
-  const oauth1 = new OAuth1({
-    apiKey,
-    apiSecret,
-    accessToken,
-    accessTokenSecret: accessSecret,
-    callback: 'oob',
-  });
-
-  return new Client({ oauth1 });
+  err({ success: false, error: 'Missing X credentials. Set X_AUTH_TOKEN or all 4 OAuth 1.0a vars.' });
 }
 
 function loadJSON(filepath) {
@@ -197,12 +201,33 @@ async function cmdPost(client, args) {
 
     try {
       const mediaData = readFileSync(filePath);
-      const uploadResult = await client.media.upload({
-        media_data: mediaData.toString('base64'),
-        media_category: 'tweet_image',
+      const bearerToken = process.env.X_AUTH_TOKEN;
+
+      if (!bearerToken) {
+        if (downloaded && existsSync(filePath)) unlinkSync(filePath);
+        err({ success: false, error: 'Media upload requires X_AUTH_TOKEN (OAuth 2.0). Not supported with OAuth 1.0a.' });
+      }
+
+      const uploadRes = await fetch('https://api.x.com/2/media/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${bearerToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          media: mediaData.toString('base64'),
+          media_category: 'tweet_image',
+          media_type: 'image/jpeg',
+          shared: false,
+        }),
       });
-      if (uploadResult?.media_id_string) {
-        params.media = { media_ids: [uploadResult.media_id_string] };
+      const uploadResult = await uploadRes.json();
+      const mediaId = uploadResult?.data?.id || uploadResult?.id || uploadResult?.media_id_string;
+      if (mediaId) {
+        params.media = { media_ids: [mediaId] };
+      } else {
+        if (downloaded && existsSync(filePath)) unlinkSync(filePath);
+        err({ success: false, error: `Media upload failed: ${JSON.stringify(uploadResult)}` });
       }
     } catch (e) {
       // Clean up temp file if downloaded
